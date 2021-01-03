@@ -17,10 +17,19 @@
 '''
 
 from discord.ext import commands
-import secrets
 
-bot = commands.Bot(":", help_command=None)
+class HelloWorld(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-bot.load_extension("core")
+    @commands.command(description="Hello World!")
+    async def helloworld(self, ctx):
+        await ctx.send("Hello World!")
 
-bot.run(secrets.token)
+def setup(bot):
+    print("Loading HelloWorld")
+    bot.add_cog(HelloWorld(bot))
+
+def teardown(bot):
+    print("Unloading HelloWorld")
+    bot.remove_cog("HelloWorld")
