@@ -71,7 +71,8 @@ class Core(commands.Cog):
         await ctx.send(embed=response)
         print("Reloading modules...")
 
-        self.bot.reload_extension("core")
+        await unload(self.bot)
+        self.bot.load_extension("core")
 
         response = discord.Embed(title="reload")
         response.add_field(name="Done!", value="Reloaded all modules")
@@ -101,7 +102,11 @@ def setup(bot):
 def teardown(bot):
     print("Unloading Core")
     bot.remove_cog("Core")
-    
-    modules = bot.extensions.keys()
+
+async def unload(bot):
+    modules = list(bot.extensions.keys())
     for m in modules:
-        bot.unload_extension(m)
+        if(m != "core"):
+            bot.unload_extension(m)
+
+    bot.unload_extension("core")
