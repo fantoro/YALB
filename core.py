@@ -72,7 +72,7 @@ class Core(commands.Cog):
         print("Reloading modules...")
 
         await unload(self.bot)
-        self.bot.load_extension("core")
+        self.bot.reload_extension("core")
 
         response = discord.Embed(title="reload")
         response.add_field(name="Done!", value="Reloaded all modules")
@@ -97,7 +97,11 @@ def setup(bot):
                 continue
 
             module = f[:-3]
-            bot.load_extension("modules.{0}".format(module))
+            try:
+                bot.load_extension("modules.{0}".format(module))
+            except Exception as e:
+                print("**{0} FAILED TO LOAD**".format(f))
+                print(e)
 
 def teardown(bot):
     print("Unloading Core")
@@ -109,4 +113,4 @@ async def unload(bot):
         if(m != "core"):
             bot.unload_extension(m)
 
-    bot.unload_extension("core")
+    #bot.unload_extension("core")
